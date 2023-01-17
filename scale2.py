@@ -46,3 +46,13 @@ def howmanyminuses(target):
                 countminuses +=1
                 buffer += (newlist[i])*((-1)**j)
              
+
+
+
+
+
+for isminus in range(2):
+    total += temp*((-1)**isminus)
+    if total >= 0:
+        count
+
