@@ -68,8 +68,3 @@ for t in range(1, T+1):
     weights = list(map(int, input().split()))
     answer = permutation(N, weights)
     print("#{} {}".format(t, answer))
-
-N = int(input())
-weights = list(map(int, input().split()))
-answer = permutation(N, weights)
-print(answer)
