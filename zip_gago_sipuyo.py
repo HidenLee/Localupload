@@ -20,11 +20,32 @@
 import sys
 sys.stdin = open("input (3).txt", "r")
 from itertools import permutations
+def zipuro2(list1):
+    distance = lambda tup1,tup2 : abs(tup1[0]-tup2[0]) + abs(tup1[1]-tup2[1])
+    start = list1[0]
+    end = list1[1]
+    company = list1[2:]
+    mindst = 10000
+    for lists in permutations(company):
+        dst = 0
+        pre = start
+        for tup in lists:
+            dst += distance(pre,tup)
+            pre = tup
+            if dst > mindst:
+                break
+        dst += distance(lists[-1],end)
+        if mindst > dst :
+            mindst = dst     
+    return mindst    
+
+
+
 def zipuro(list1):
     
-    
-    def distance(tup1,tup2): # 두 점간의 거리를 구하는 함수
-        return abs(tup1[0]-tup2[0])+ abs(tup1[1]-tup2[1])
+    distance = lambda tup1,tup2 : abs(tup1[0]-tup2[0]) + abs(tup1[1]-tup2[1])
+    # def distance(tup1,tup2): # 두 점간의 거리를 구하는 함수
+    #     return abs(tup1[0]-tup2[0])+ abs(tup1[1]-tup2[1])
     
 
     #distances[n][m] = n좌표와 m좌표 사이의 거리
@@ -32,14 +53,14 @@ def zipuro(list1):
     for broop in range(len(list1)): # list = [1,2,3,4,5] ,len(list) = 5 => 0,1,2,3,4
         for sroop in range(1,len(list1)-broop): # 1,2,3,4 / 1,2,3 / 1,2 / 1 / none
             distances[broop][broop+sroop] = distance(list1[broop],list1[broop+sroop]) # 0,1~0,4 / 1,2~1,4 / 2,3~2,4 / 3,4 / none
-
+    # print(distances)
     #배열을 섞기 1번 2번튜플 제외 나머지의 배열을 섞기
     def shuffle(list2):
         start = list2.pop(0)
         end = list2.pop(0)
         alllist = []
-        temp = list(permutations(list2,len(list2)))
-        for perm in temp:
+        # temp = list(permutations(list2,len(list2)))
+        for perm in permutations(list2):
             newlist = []
             newlist.append(start)
             for elem in perm:
@@ -49,24 +70,25 @@ def zipuro(list1):
         return alllist
     
     shufflelist = shuffle(list(range(len(list1)))) # 0~N-1으로 대체해서 섞음
-    sumlist = []
+    result = 1000000
     for lists in shufflelist:
         temp = 0
         for roop in range(len(lists)-1):
-            if distances[lists[roop]][lists[roop+1]] != 0:
+            if lists[roop] <= lists[roop+1]:
                 temp += distances[lists[roop]][lists[roop+1]]
-            else:
+            elif lists[roop] > lists[roop+1]:    
                 temp += distances[lists[roop+1]][lists[roop]]    
-        sumlist.append(temp)
-    sumlist.sort()
-    print(sumlist)
-    return sumlist[0]
+            else:
+                print('indexerror')
+        if result > temp:
+            result = temp
+    return result
 
 T = int(input())
 for test_case in range(1, T + 1):
     a = int(input())
     list1 = list(map(int,input().split()))
     list2 = []
-    for roop in range(a):
-        list2.append((list1[2*roop] , list1[2*roop+1]))    
-    print(f'#{test_case} {zipuro(list2)}')	
+    for roop in range(a+2):
+        list2.append((list1[2*roop] , list1[2*roop+1]))        
+    print(f'#{test_case} {zipuro2(list2)}')	
